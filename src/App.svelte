@@ -13,33 +13,40 @@
 
   const validPaths = new Set(tabs.map((tab) => tab.path));
 
-  function resolvePath(pathname) {
-    return validPaths.has(pathname) ? pathname : "/member";
+  function resolvePath(path) {
+    return validPaths.has(path) ? path : "/member";
   }
 
-  const initialPath = resolvePath(window.location.pathname);
+  function readHashPath() {
+    return window.location.hash.startsWith("#")
+      ? window.location.hash.slice(1)
+      : window.location.hash;
+  }
+
+  const initialPath = resolvePath(readHashPath());
   let currentPath = initialPath;
 
-  if (window.location.pathname !== initialPath) {
-    window.history.replaceState({}, "", initialPath);
+  if (window.location.hash !== `#${initialPath}`) {
+    window.history.replaceState({}, "", `#${initialPath}`);
   }
 
   function navigate(path) {
     if (path === currentPath) return;
     currentPath = path;
-    window.history.pushState({}, "", path);
+    window.location.hash = path;
   }
 
-  function onPopstate() {
-    const resolved = resolvePath(window.location.pathname);
+  function onHashchange() {
+    const resolved = resolvePath(readHashPath());
     currentPath = resolved;
-    if (resolved !== window.location.pathname) {
-      window.history.replaceState({}, "", resolved);
+    const normalizedHash = `#${resolved}`;
+    if (window.location.hash !== normalizedHash) {
+      window.history.replaceState({}, "", normalizedHash);
     }
   }
 </script>
 
-<svelte:window on:popstate={onPopstate} />
+<svelte:window onhashchange={onHashchange} />
 
 <main class="app-shell">
   <header class="top-tabs">
@@ -48,7 +55,7 @@
         type="button"
         class="tab-btn"
         class:active={currentPath === tab.path}
-        on:click={() => navigate(tab.path)}
+        onclick={() => navigate(tab.path)}
       >
         {tab.label}
       </button>
