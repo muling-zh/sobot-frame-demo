@@ -4,72 +4,48 @@
   import GoodListPage from "./pages/GoodListPage.svelte";
   import CustomCardPage from "./pages/CustomCardPage.svelte";
 
-  const tabs = [
-    { path: "/member", label: "会员信息" },
-    { path: "/order-list", label: "历史订单" },
-    { path: "/goodlist", label: "商品列表" },
-    { path: "/customcard", label: "自定义卡片" },
+  const items = [
+    { key: "member", label: "会员信息" },
+    { key: "order-list", label: "历史订单" },
+    { key: "goodlist", label: "商品列表" },
+    { key: "customcard", label: "自定义卡片" },
   ];
 
-  const validPaths = new Set(tabs.map((tab) => tab.path));
+  const validKeys = new Set(items.map((tab) => tab.key));
 
-  function resolvePath(path) {
-    return validPaths.has(path) ? path : "/member";
+  function resolveActiveKey(key) {
+    return validKeys.has(key) ? key : "member";
   }
+  let activeKey = resolveActiveKey("member");
 
-  function readHashPath() {
-    return window.location.hash.startsWith("#")
-      ? window.location.hash.slice(1)
-      : window.location.hash;
-  }
-
-  const initialPath = resolvePath(readHashPath());
-  let currentPath = initialPath;
-
-  if (window.location.hash !== `#${initialPath}`) {
-    window.history.replaceState({}, "", `#${initialPath}`);
-  }
-
-  function navigate(path) {
-    if (path === currentPath) return;
-    currentPath = path;
-    window.location.hash = path;
-  }
-
-  function onHashchange() {
-    const resolved = resolvePath(readHashPath());
-    currentPath = resolved;
-    const normalizedHash = `#${resolved}`;
-    if (window.location.hash !== normalizedHash) {
-      window.history.replaceState({}, "", normalizedHash);
-    }
+  function onTabChange(key) {
+    if (key === activeKey) return;
+    activeKey = resolveActiveKey(key);
   }
 </script>
 
-<svelte:window onhashchange={onHashchange} />
-
 <main class="app-shell">
   <header class="top-tabs">
-    {#each tabs as tab (tab.path)}
+    {#each items as item (item.key)}
       <button
         type="button"
         class="tab-btn"
-        class:active={currentPath === tab.path}
-        onclick={() => navigate(tab.path)}
+        class:active={activeKey === item.key}
+        onclick={() => onTabChange(item.key)}
       >
-        {tab.label}
+        {item.label}
       </button>
     {/each}
   </header>
 
   <section class="page-body">
-    {#if currentPath === "/member"}
+    {#if activeKey === "member"}
       <MemberPage />
-    {:else if currentPath === "/order-list"}
+    {:else if activeKey === "order-list"}
       <OrderListPage />
-    {:else if currentPath === "/goodlist"}
+    {:else if activeKey === "goodlist"}
       <GoodListPage />
-    {:else}
+    {:else if activeKey === "customcard"}
       <CustomCardPage />
     {/if}
   </section>
