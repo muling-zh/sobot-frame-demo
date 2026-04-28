@@ -31,7 +31,7 @@
         type="button"
         class="tab-btn"
         class:active={activeKey === item.key}
-        onclick={() => onTabChange(item.key)}
+        on:click={() => onTabChange(item.key)}
       >
         {item.label}
       </button>
