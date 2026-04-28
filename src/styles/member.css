@@ -1,0 +1,46 @@
+p{
+    margin:0;
+    padding:0
+}
+.h4{
+    margin-bottom: 10px;
+    font-size:15px;
+    font-weight: 600;
+}
+.clear{
+    clear:both
+}
+.bold{
+    color:#8598B7;
+}
+.userPlist .org{
+   /* color: #ff910c */
+}
+.more{
+    margin-left:100px;
+    cursor: pointer;
+    font-size:12px;
+}
+.more a{
+    text-decoration: none;
+    color:#0f92ed;
+
+}
+.userValue{
+    color: #3d4966;
+}
+.userArea{
+    width:380px;
+    margin-bottom: 20px;
+}
+.userArea .p4{
+    margin-bottom: 5px;
+    font-size:14px;
+}
+.userPlist{
+    float:left;
+    width:170px;
+}
+.userPlist2{
+    margin-left:20px;
+}
